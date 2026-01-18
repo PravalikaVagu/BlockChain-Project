@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product | Safe Food Supply</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- GSAP for advanced animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <!-- Particle.js for background effects -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4bb543;
+            --warning: #f8961e;
+            --danger: #f94144;
+            --info: #4895ef;
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-accent: linear-gradient(135deg, var(--accent), var(--primary));
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7ff;
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Particle.js background */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        /* Glass morphism effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        /* Navbar styling */
+        .navbar {
+            background: var(--gradient);
+            box-shadow: var(--shadow-lg);
+            padding: 0.8rem 1rem;
+            z-index: 1000;
+            position: relative;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: white !important;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .navbar-brand i {
+            margin-right: 0.8rem;
+            color: var(--accent);
+            font-size: 1.4rem;
+        }
+
+        .navbar-brand:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            margin: 0 0.2rem;
+            border-radius: 8px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white !important;
+            font-weight: 600;
+        }
+
+        .navbar-toggler {
+            border: none;
+            color: white;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        /* Main content */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            padding-top: 6rem;
+            padding-bottom: 4rem;
+        }
+
+        /* Page title */
+        .page-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60%;
+            height: 4px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+
+        .page-title i {
+            margin-right: 1rem;
+            color: var(--primary);
+            font-size: 2.4rem;
+        }
+
+        /* Card styling */
+        .card {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 1;
+            background: white;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .card-header {
+            background: var(--gradient);
+            color: white;
+            padding: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+            animation: shine 3s infinite linear;
+        }
+
+        @keyframes shine {
+            0% { transform: rotate(30deg) translate(-30%, -30%); }
+            100% { transform: rotate(30deg) translate(30%, 30%); }
+        }
+
+        .card-header i {
+            margin-right: 1rem;
+            color: var(--accent);
+        }
+
+        .card-body {
+            padding: 2.5rem;
+        }
+
+        /* Section title */
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid rgba(67, 97, 238, 0.2);
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 1rem;
+            color: var(--secondary);
+        }
+
+        /* Form styling */
+        .form-label {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-label i {
+            margin-right: 0.5rem;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            background-color: rgba(245, 247, 255, 0.5);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+            background-color: white;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-text {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 0.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border: none;
+        }
+
+        .btn i {
+            margin-right: 0.7rem;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--gradient);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+            color: white;
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Floating animation */
+        .float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Alert styling */
+        .alert {
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border: none;
+            padding: 1.2rem 1.5rem;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInDown 0.5s ease-out;
+        }
+
+        .alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+        }
+
+        .alert-success {
+            background-color: rgba(75, 181, 67, 0.1);
+            color: #2e7d32;
+        }
+
+        .alert-success::before {
+            background-color: var(--success);
+        }
+
+        .alert-danger {
+            background-color: rgba(249, 65, 68, 0.1);
+            color: #c62828;
+        }
+
+        .alert-danger::before {
+            background-color: var(--danger);
+        }
+
+        .alert-info {
+            background-color: rgba(72, 149, 239, 0.1);
+            color: #1565c0;
+        }
+
+        .alert-info::before {
+            background-color: var(--info);
+        }
+
+        .alert-warning {
+            background-color: rgba(248, 150, 30, 0.1);
+            color: #ef6c00;
+        }
+
+        .alert-warning::before {
+            background-color: var(--warning);
+        }
+
+        .alert i {
+            margin-right: 0.8rem;
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        /* Decorative elements */
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            top: -150px;
+            right: -150px;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            background: var(--accent);
+            bottom: -100px;
+            left: -100px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2.2rem;
+            }
+            
+            .card-body {
+                padding: 1.5rem;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+
+        /* Custom animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Floating label effect */
+        .floating-label-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .floating-label {
+            position: absolute;
+            top: 1rem;
+            left: 1.2rem;
+            color: #6c757d;
+            transition: var(--transition);
+            pointer-events: none;
+            background: white;
+            padding: 0 0.3rem;
+            border-radius: 4px;
+        }
+
+        .form-control:focus + .floating-label,
+        .form-control:not(:placeholder-shown) + .floating-label {
+            top: -0.6rem;
+            left: 1rem;
+            font-size: 0.8rem;
+            color: var(--primary);
+            background: white;
+            z-index: 10;
+        }
+
+        /* Custom checkbox */
+        .form-check-input:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Tooltip styling */
+        .tooltip-inner {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            background: var(--dark);
+        }
+
+        .bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+        .bs-tooltip-top .tooltip-arrow::before {
+            border-top-color: var(--dark);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle.js Background -->
+    <div id="particles-js"></div>
+    
+    <!-- Decorative Circles -->
+    <div class="decorative-circle circle-1"></div>
+    <div class="decorative-circle circle-2"></div>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+                <i class="fas fa-leaf"></i>SafeFoodChain
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        
+                    </li>
+                    {% if session.get('logged_in') %}
+                        {% if session.get('role') == 'Producer' %}
+                            <li class="nav-item">
+                                
+                            </li>
+                        {% elif session.get('role') == 'Admin' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('admin_dashboard') }}"><i class="fas fa-cog me-1"></i>Admin</a>
+                            </li>
+                        {% elif session.get('role') == 'Consumer' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('consumer_dashboard') }}"><i class="fas fa-user me-1"></i>Consumer</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    {% if session.get('logged_in') %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle me-1"></i>{{ session.get('username') }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light me-2" href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt me-1"></i>Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-light" href="{{ url_for('register') }}"><i class="fas fa-user-plus me-1"></i>Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show mb-4" role="alert">
+                            <div class="d-flex align-items-center">
+                                <i class="fas {% if category == 'success' %}fa-check-circle{% elif category == 'danger' %}fa-exclamation-triangle{% elif category == 'info' %}fa-info-circle{% elif category == 'warning' %}fa-exclamation-circle{% endif %} me-2"></i>
+                                <span>{{ message }}</span>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Page Title -->
+            <div class="text-center mb-5" data-aos="fade-down">
+                <h1 class="page-title animate__animated animate__fadeIn">
+                    <i class="fas fa-box-open float"></i>Register New Product
+                </h1>
+                <p class="lead text-muted">Add your food product to the blockchain supply chain</p>
+            </div>
+
+            <!-- Product Form Card -->
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="card mb-5 animate__animated animate__fadeInUp" data-aos="zoom-in">
+                        <div class="card-header">
+                            <i class="fas fa-clipboard-list"></i> Product Registration
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ url_for('add_product') }}">
+                                <!-- Product Information Section -->
+                                <div class="mb-5">
+                                    <h5 class="section-title">
+                                        <i class="fas fa-info-circle"></i> Product Details
+                                    </h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+                                            <div class="floating-label-group">
+                                                <input type="text" class="form-control" id="food_item_id" name="food_item_id" required placeholder=" ">
+                                                <label class="floating-label" for="food_item_id">
+                                                    <i class="fas fa-barcode"></i> Product/Batch ID <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="form-text">Unique identifier for this product batch</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="floating-label-group">
+                                                <input type="text" class="form-control" id="product_name" name="product_name" required placeholder=" ">
+                                                <label class="floating-label" for="product_name">
+                                                    <i class="fas fa-tag"></i> Product Name <span class="text-danger">*</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <div class="floating-label-group">
+                                            <textarea class="form-control" id="description" name="description" rows="3" placeholder=" "></textarea>
+                                            <label class="floating-label" for="description">
+                                                <i class="fas fa-align-left"></i> Description <span class="text-danger">*</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+                                            <div class="floating-label-group">
+                                                <input type="number" step="0.01" class="form-control" id="price" name="price" required min="0.01" placeholder=" ">
+                                                <label class="floating-label" for="price">
+                                                    <i class="fas fa-rupee-sign"></i> Price (INR) <span class="text-danger">*</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Initial Event Section -->
+                                <div class="mb-4">
+                                    <h5 class="section-title">
+                                        <i class="fas fa-calendar-plus"></i> Initial Supply Chain Event
+                                    </h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+                                            <div class="floating-label-group">
+                                                <input type="text" class="form-control" id="event_type" name="event_type" required placeholder=" ">
+                                                <label class="floating-label" for="event_type">
+                                                    <i class="fas fa-calendar-check"></i> Event Type <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="form-text">e.g., Harvested, Produced, Packaged</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="floating-label-group">
+                                                <input type="text" class="form-control" id="location" name="location" required placeholder=" ">
+                                                <label class="floating-label" for="location">
+                                                    <i class="fas fa-map-marker-alt"></i> Location <span class="text-danger">*</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <div class="floating-label-group">
+                                            <textarea class="form-control" id="details" name="details" rows="2" placeholder=" "></textarea>
+                                            <label class="floating-label" for="details">
+                                                <i class="fas fa-info-circle"></i> Event Details <span class="text-danger">*</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Form Actions -->
+                                <div class="d-flex justify-content-end gap-3 mt-5">
+                                    <a href="{{ url_for('producer_dashboard') }}" class="btn btn-secondary ripple">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </a>
+                                    <button type="submit" class="btn btn-primary ripple pulse">
+                                        <i class="fas fa-plus-circle"></i> Add Product
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="row align-items-center justify-content-center"> 
+            <div class="col-md-6 text-center mb-3 mb-md-0">
+                &copy; 2025 <strong>SafeFoodChain</strong>. All rights reserved.
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Initialize AOS animations
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Initialize particle.js
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.getElementById('particles-js')) {
+                particlesJS('particles-js', {
+                    "particles": {
+                        "number": {
+                            "value": 80,
+                            "density": {
+                                "enable": true,
+                                "value_area": 800
+                            }
+                        },
+                        "color": {
+                            "value": "#4361ee"
+                        },
+                        "shape": {
+                            "type": "circle",
+                            "stroke": {
+                                "width": 0,
+                                "color": "#000000"
+                            },
+                            "polygon": {
+                                "nb_sides": 5
+                            }
+                        },
+                        "opacity": {
+                            "value": 0.3,
+                            "random": false,
+                            "anim": {
+                                "enable": false,
+                                "speed": 1,
+                                "opacity_min": 0.1,
+                                "sync": false
+                            }
+                        },
+                        "size": {
+                            "value": 3,
+                            "random": true,
+                            "anim": {
+                                "enable": false,
+                                "speed": 40,
+                                "size_min": 0.1,
+                                "sync": false
+                            }
+                        },
+                        "line_linked": {
+                            "enable": true,
+                            "distance": 150,
+                            "color": "#4361ee",
+                            "opacity": 0.2,
+                            "width": 1
+                        },
+                        "move": {
+                            "enable": true,
+                            "speed": 2,
+                            "direction": "none",
+                            "random": false,
+                            "straight": false,
+                            "out_mode": "out",
+                            "bounce": false,
+                            "attract": {
+                                "enable": false,
+                                "rotateX": 600,
+                                "rotateY": 1200
+                            }
+                        }
+                    },
+                    "interactivity": {
+                        "detect_on": "canvas",
+                        "events": {
+                            "onhover": {
+                                "enable": true,
+                                "mode": "grab"
+                            },
+                            "onclick": {
+                                "enable": true,
+                                "mode": "push"
+                            },
+                            "resize": true
+                        },
+                        "modes": {
+                            "grab": {
+                                "distance": 140,
+                                "line_linked": {
+                                    "opacity": 1
+                                }
+                            },
+                            "bubble": {
+                                "distance": 400,
+                                "size": 40,
+                                "duration": 2,
+                                "opacity": 8,
+                                "speed": 3
+                            },
+                            "repulse": {
+                                "distance": 200,
+                                "duration": 0.4
+                            },
+                            "push": {
+                                "particles_nb": 4
+                            },
+                            "remove": {
+                                "particles_nb": 2
+                            }
+                        }
+                    },
+                    "retina_detect": true
+                });
+            }
+
+            // Add ripple effect to buttons
+            const buttons = document.querySelectorAll('.ripple');
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // Remove any existing ripples
+                    const existingRipples = this.querySelectorAll('.ripple-effect');
+                    existingRipples.forEach(ripple => ripple.remove());
+
+                    // Create new ripple
+                    const ripple = document.createElement('span');
+                    ripple.classList.add('ripple-effect');
+                    
+                    // Position the ripple at click location
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    ripple.style.left = `${x}px`;
+                    ripple.style.top = `${y}px`;
+                    
+                    this.appendChild(ripple);
+                    
+                    // Remove ripple after animation
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+
+            // Auto-close alerts after 5 seconds
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    const bsAlert = bootstrap.Alert.getInstance(alert) || new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 5000);
+            });
+
+            // Add floating animation to elements with .float class
+            gsap.to(".float", {
+                y: 15,
+                duration: 2,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
+
+            // Add pulse animation to elements with .pulse class
+            gsap.to(".pulse", {
+                scale: 1.05,
+                duration: 1,
+                repeat: -1,
+                yoyo: true,
+                ease: "power1.inOut"
+            });
+
+            // Tooltip initialization
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+</body>
+</html>

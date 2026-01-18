@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Add Food Event{% endblock %}
+{% block content %}
+<h2 class="mb-4">Record New Food Supply Chain Event</h2>
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="food_item_id">Food Item ID (e.g., BATCH_001_APPLES)</label>
+                    <input type="text" class="form-control" id="food_item_id" name="food_item_id" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="event_type">Event Type</label>
+                    <select class="form-control" id="event_type" name="event_type" required>
+                        <option value="">Select Event Type</option>
+                        <option value="Harvested">Harvested</option>
+                        <option value="Processed">Processed</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Received">Received</option>
+                        <option value="Inspected">Inspected</option>
+                        <option value="Packaged">Packaged</option>
+                        <option value="Sold">Sold</option>
+                        <option value="Recalled">Recalled</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="sender">Sender (Previous Handler/Entity)</label>
+                    <input type="text" class="form-control" id="sender" name="sender" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="recipient">Recipient (Next Handler/Entity)</label>
+                    <input type="text" class="form-control" id="recipient" name="recipient" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="producer">Producer (Original Source/Current Handler)</label>
+                    <input type="text" class="form-control" id="producer" name="producer" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="location">Location (City, State, Country/Facility Name)</label>
+                    <input type="text" class="form-control" id="location" name="location" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="amount">Amount (e.g., Monetary Value or Placeholder)</label>
+                    <input type="number" class="form-control" id="amount" name="amount" step="0.01" value="0.00" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="quantity">Quantity (e.g., 100 kg, 50 units)</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" step="0.01">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="temperature_log">Temperature Log (e.g., 2°C to 4°C during transit)</label>
+                <input type="text" class="form-control" id="temperature_log" name="temperature_log">
+            </div>
+            <div class="form-group">
+                <label for="certification_info">Certification Info (e.g., Organic Certified, ISO 22000)</label>
+                <input type="text" class="form-control" id="certification_info" name="certification_info">
+            </div>
+            <div class="form-group">
+                <label for="destination">Destination (Final Destination or Next Hub)</label>
+                <input type="text" class="form-control" id="destination" name="destination">
+            </div>
+            <div class="form-group">
+                <label for="notes">Additional Notes</label>
+                <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-block mt-4">Add Food Event to Blockchain</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

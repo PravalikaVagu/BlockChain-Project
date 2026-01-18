@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Producer Dashboard | A Blockchain-Based System for Safe Food Supply and Supervision</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Glow Effect -->
+    <link href="https://cdn.jsdelivr.net/npm/glow.css@1.0.0/glow.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --dark-color: #1a1a2e;
+            --light-color: #f8f9fa;
+            --success-color: #4ade80;
+            --warning-color: #fbbf24;
+            --danger-color: #f87171;
+            --sidebar-width: 280px;
+            --sidebar-collapsed-width: 80px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7ff;
+            color: #333;
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding-top: 70px;
+        }
+
+        /* Modern Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: linear-gradient(135deg, var(--dark-color), #16213e);
+            color: white;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            z-index: 1000;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .sidebar-collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+
+        .sidebar-collapsed .brand-text,
+        .sidebar-collapsed .nav-link-text {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .sidebar-collapsed .nav-link {
+            justify-content: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-icon {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-right: 15px;
+            min-width: 40px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .brand-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .nav-menu {
+            padding: 0 1rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(90deg, rgba(67, 97, 238, 0.3), transparent);
+            color: white;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .nav-link i {
+            font-size: 1.2rem;
+            margin-right: 15px;
+            min-width: 24px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .nav-link-text {
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            z-index: 1001;
+        }
+
+        .toggle-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .toggle-btn i {
+            transition: all 0.3s;
+        }
+
+        .sidebar-collapsed .toggle-btn i {
+            transform: rotate(180deg);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            min-height: calc(100vh - 70px);
+        }
+
+        .sidebar-collapsed ~ .main-content {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+
+        /* Modern Cards */
+        .modern-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modern-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.03), transparent);
+            z-index: 0;
+        }
+
+        .modern-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.2rem 1.5rem;
+            border-bottom: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-header h5 {
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Modern Buttons */
+        .btn-modern {
+            border: none;
+            border-radius: 8px;
+            padding: 0.6rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-modern::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.3s;
+        }
+
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-modern:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        /* Modern Table */
+        .modern-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .modern-table thead th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem;
+            font-weight: 500;
+            border: none;
+        }
+
+        .modern-table tbody tr {
+            transition: all 0.3s;
+        }
+
+        .modern-table tbody tr:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+            transform: translateX(5px);
+        }
+
+        .modern-table tbody td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            vertical-align: middle;
+        }
+
+        .modern-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.35rem 0.7rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .status-badge i {
+            margin-right: 5px;
+            font-size: 0.7rem;
+        }
+
+        .badge-pending {
+            background-color: rgba(251, 191, 36, 0.1);
+            color: #d97706;
+        }
+
+        .badge-verified {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #059669;
+            animation: pulse 2s infinite;
+        }
+
+        .badge-tampered {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar-collapsed {
+                transform: translateX(0);
+                width: var(--sidebar-collapsed-width);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .sidebar-show {
+                transform: translateX(0);
+            }
+            .mobile-toggle {
+                display: block !important;
+            }
+        }
+
+        /* Mobile Toggle Button */
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 999;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .mobile-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #d1d5db;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state h4 {
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: #9ca3af;
+            max-width: 400px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="brand">
+        <div class="brand-icon">
+            <i class="fas fa-seedling"></i>
+        </div>
+        <div class="brand-text">SafeFoodChain</div>
+    </div>
+
+    <div class="nav-menu">
+        <div class="nav-item">
+            <a href="{{ url_for('home') }}" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span class="nav-link-text">Home</span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="{{ url_for('producer_dashboard') }}" class="nav-link active">
+                <i class="fas fa-warehouse"></i>
+                <span class="nav-link-text">Dashboard</span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="{{ url_for('add_product') }}" class="nav-link">
+                <i class="fas fa-plus-circle"></i>
+                <span class="nav-link-text">Add Product</span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="{{ url_for('logout') }}" class="nav-link">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="nav-link-text">Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="toggle-btn" id="toggle-btn">
+        <i class="fas fa-chevron-left"></i>
+    </div>
+</div>
+
+<!-- Mobile Toggle Button -->
+<div class="mobile-toggle" id="mobile-toggle">
+    <i class="fas fa-bars"></i>
+</div>
+
+<!-- Main Content -->
+<div class="main-content" id="main-content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0"><i class="fas fa-warehouse me-2"></i>Producer Dashboard</h2>
+            <p class="text-muted mb-0">Manage your food products on the blockchain</p>
+        </div>
+        <div class="text-end">
+            {% if session.get('logged_in') %}
+                <div class="badge bg-light text-dark p-2">
+                    <i class="fas fa-user-circle me-1"></i>
+                    {{ session.get('username') }} ({{ session.get('role') }})
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="modern-card h-100 floating" data-aos="fade-up">
+                <div class="card-header">
+                    <h5><i class="fas fa-plus-circle me-2"></i>New Product</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p class="text-muted">Register a new food product batch and its initial supply details.</p>
+                    <a href="{{ url_for('add_product') }}" class="btn btn-modern btn-success">
+                        <i class="fas fa-plus me-2"></i> Add Product
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="modern-card h-100" data-aos="fade-up" data-aos-delay="100">
+                <div class="card-header">
+                    <h5><i class="fas fa-check-circle me-2"></i>Verified Products</h5>
+                </div>
+                <div class="card-body text-center">
+                    <h3 class="text-success">{{ my_products|selectattr('verification_status', 'equalto', 'Verified')|list|length }}</h3>
+                    <p class="text-muted mb-4">Successfully verified products</p>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-success" role="progressbar" 
+                             style="width: {{ (my_products|selectattr('verification_status', 'equalto', 'Verified')|list|length / my_products|length * 100) if my_products else 0 }}%" 
+                             aria-valuenow="{{ (my_products|selectattr('verification_status', 'equalto', 'Verified')|list|length / my_products|length * 100) if my_products else 0 }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="modern-card h-100" data-aos="fade-up" data-aos-delay="200">
+                <div class="card-header">
+                    <h5><i class="fas fa-exclamation-triangle me-2"></i>Issues</h5>
+                </div>
+                <div class="card-body text-center">
+                    <h3 class="text-danger">{{ my_products|selectattr('verification_status', 'equalto', 'Tampered')|list|length }}</h3>
+                    <p class="text-muted mb-4">Products with issues</p>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-danger" role="progressbar" 
+                             style="width: {{ (my_products|selectattr('verification_status', 'equalto', 'Tampered')|list|length / my_products|length * 100 if my_products else 0) }}%" 
+                             aria-valuenow="{{ (my_products|selectattr('verification_status', 'equalto', 'Tampered')|list|length / my_products|length * 100 if my_products else 0) }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product List -->
+    <div class="modern-card" data-aos="fade-up">
+        <div class="card-header">
+            <h5><i class="fas fa-boxes me-2"></i>My Registered Products</h5>
+        </div>
+        <div class="card-body">
+            {% if my_products %}
+                <div class="table-responsive">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>Product ID</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in my_products %}
+                                <tr data-aos="fade-right" data-aos-delay="{{ loop.index * 50 }}">
+                                    <td><strong>#{{ product.food_item_id }}</strong></td>
+                                    <td>{{ product.product_name }}</td>
+                                    <td>₹{{ "%.2f"|format(product.price) }}</td>
+                                    <td>
+                                        {% if product.verification_status == 'Pending' %}
+                                            <span class="status-badge badge-pending">
+                                                <i class="fas fa-hourglass-half"></i> Pending
+                                            </span>
+                                        {% elif product.verification_status == 'Verified' %}
+                                            <span class="status-badge badge-verified">
+                                                <i class="fas fa-check-circle"></i> Verified
+                                            </span>
+                                        {% elif product.verification_status == 'Tampered' %}
+                                            <span class="status-badge badge-tampered">
+                                                <i class="fas fa-exclamation-triangle"></i> Tampered
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ product.created_at | timestamp_to_datetime }}</td>
+                                    <td>
+                                        <a href="{{ url_for('product_details', food_item_id=product.food_item_id) }}" class="btn btn-sm btn-modern btn-primary">
+                                            <i class="fas fa-truck me-1"></i> Orders
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-box-open"></i>
+                    <h4>No Products Found</h4>
+                    <p>You haven't registered any products yet. Start by adding your first product to the blockchain network.</p>
+                    <a href="{{ url_for('add_product') }}" class="btn btn-modern btn-primary mt-3">
+                        <i class="fas fa-plus me-2"></i> Add First Product
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js"></script>
+
+<script>
+    // Initialize AOS animations
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true
+    });
+
+    // Sidebar toggle functionality
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggle-btn');
+    const mobileToggle = document.getElementById('mobile-toggle');
+    const mainContent = document.getElementById('main-content');
+
+    // Toggle sidebar collapse
+    function toggleSidebar() {
+        sidebar.classList.toggle('sidebar-collapsed');
+    }
+
+    // Toggle mobile sidebar
+    function toggleMobileSidebar() {
+        sidebar.classList.toggle('sidebar-show');
+    }
+
+    // Event listeners
+    toggleBtn.addEventListener('click', toggleSidebar);
+    mobileToggle.addEventListener('click', toggleMobileSidebar);
+
+    // Initialize tilt.js on cards
+    VanillaTilt.init(document.querySelectorAll(".modern-card"), {
+        max: 5,
+        speed: 400,
+        glare: true,
+        "max-glare": 0.2,
+    });
+
+    // Add ripple effect to buttons
+    document.querySelectorAll('.btn-modern').forEach(button => {
+        button.addEventListener('click', function(e) {
+            const x = e.clientX - e.target.getBoundingClientRect().left;
+            const y = e.clientY - e.target.getBoundingClientRect().top;
+            
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple-effect');
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 1000);
+        });
+    });
+
+    // Dynamic sidebar highlight based on current page
+    const currentPage = window.location.pathname.split('/').pop() || 'home';
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href').includes(currentPage)) {
+            link.classList.add('active');
+        }
+    });
+
+    // Responsive adjustments
+    function handleResize() {
+        if (window.innerWidth < 992) {
+            sidebar.classList.add('sidebar-collapsed');
+            sidebar.classList.remove('sidebar-show');
+        }
+    }
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+</script>
+
+</body>
+</html>

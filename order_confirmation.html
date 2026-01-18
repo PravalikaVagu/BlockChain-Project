@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Food Supply - Order Confirmation</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --info-color: #4895ef;
+            --warning-color: #f8961e;
+            --danger-color: #f94144;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --bg-gradient: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7ff;
+            color: var(--dark-color);
+            padding-top: 80px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .navbar {
+            background: var(--bg-gradient) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 0.8rem 1rem;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .navbar-brand i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 0.375rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .navbar-toggler {
+            border: none;
+            padding: 0.5rem;
+        }
+        
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+        
+        .btn-outline-light:hover {
+            color: var(--primary-color) !important;
+        }
+        
+        .footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+        
+        .footer p {
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+        }
+        
+        /* Confirmation Header */
+        .confirmation-header {
+            text-align: center;
+            padding: 3rem 0;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(63, 55, 201, 0.1) 100%);
+            border-radius: 16px;
+        }
+        
+        .confirmation-header::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.1) 0%, rgba(67, 97, 238, 0) 70%);
+            border-radius: 50%;
+        }
+        
+        .confirmation-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.1) 0%, rgba(67, 97, 238, 0) 70%);
+            border-radius: 50%;
+        }
+        
+        .confirmation-icon {
+            font-size: 5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .confirmation-icon::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px dashed var(--primary-color);
+            border-radius: 50%;
+            animation: rotate 15s linear infinite;
+            opacity: 0.3;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .confirmation-header h2 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .confirmation-header p.lead {
+            font-size: 1.25rem;
+            color: #495057;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .order-id {
+            background: var(--bg-gradient);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        /* Order Details Card */
+        .order-card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            background-color: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            background: var(--bg-gradient);
+            color: white;
+            padding: 1.25rem 1.5rem;
+            font-weight: 600;
+            font-size: 1.25rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
+            transform: rotate(30deg);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            100% { transform: translateX(100%) rotate(30deg); }
+        }
+        
+        .card-body {
+            padding: 2rem;
+        }
+        
+        /* Address Box */
+        .address-box {
+            background-color: #f8f9ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .address-box::before {
+            content: '\f3c5';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 3rem;
+            color: rgba(67, 97, 238, 0.05);
+            z-index: 0;
+        }
+        
+        .address-box h5 {
+            position: relative;
+            z-index: 1;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .address-box h5 i {
+            margin-right: 10px;
+            font-size: 1.25rem;
+        }
+        
+        /* Status Box */
+        .status-box {
+            background-color: #f0f8ff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .status-box h5 {
+            color: var(--info-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .status-box h5 i {
+            margin-right: 10px;
+            font-size: 1.25rem;
+        }
+        
+        .payment-status {
+            font-weight: 600;
+            color: var(--success-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .payment-status i {
+            margin-right: 8px;
+        }
+        
+        .order-status {
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .order-status i {
+            margin-right: 8px;
+        }
+        
+        /* Table Styles */
+        .table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+        }
+        
+        .table thead th {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-weight: 500;
+        }
+        
+        .table tbody td {
+            padding: 1rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            vertical-align: middle;
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(67, 97, 238, 0.03);
+        }
+        
+        .table tfoot td {
+            font-weight: 600;
+            padding: 1rem;
+            border-top: 2px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Buttons */
+        .btn {
+            font-weight: 500;
+            padding: 0.75rem 1.75rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: none !important;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background: var(--bg-gradient);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.3) !important;
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.2) !important;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+            font-size: 1rem;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+            
+            .confirmation-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .confirmation-header p.lead {
+                font-size: 1rem;
+            }
+            
+            .card-body {
+                padding: 1.5rem;
+            }
+            
+            .table thead {
+                display: none;
+            }
+            
+            .table, .table tbody, .table tr, .table td {
+                display: block;
+                width: 100%;
+            }
+            
+            .table tr {
+                margin-bottom: 1rem;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+                overflow: hidden;
+            }
+            
+            .table td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+                border-top: 1px solid rgba(0, 0, 0, 0.05);
+            }
+            
+            .table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 1rem;
+                width: calc(50% - 1rem);
+                padding-right: 1rem;
+                text-align: left;
+                font-weight: 600;
+                color: var(--primary-color);
+            }
+            
+            .table tfoot td {
+                text-align: right;
+                padding-left: 1rem;
+            }
+            
+            .table tfoot td::before {
+                display: none;
+            }
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3a56d4;
+        }
+        
+        /* Animation Classes */
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(67, 97, 238, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+                <i class="fas fa-shield-alt"></i>
+                SafeFoodChain
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                    </li>
+                    {% if session.get('logged_in') %}
+                        {% if session.get('role') == 'Producer' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('producer_dashboard') }}">Producer Dashboard</a>
+                            </li>
+                        {% elif session.get('role') == 'Admin' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
+                            </li>
+                        {% elif session.get('role') == 'Consumer' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('consumer_dashboard') }}">Consumer Dashboard</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    {% if session.get('logged_in') %}
+                        <li class="nav-item">
+                            <span class="navbar-text me-3">
+                                <i class="fas fa-user-circle me-1"></i>
+                                <strong>{{ session.get('username') }}</strong> ({{ session.get('role') }})
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light" href="{{ url_for('logout') }}">
+                                <i class="fas fa-sign-out-alt me-1"></i> Logout
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item me-2">
+                            <a class="btn btn-primary" href="{{ url_for('login') }}">
+                                <i class="fas fa-sign-in-alt me-1"></i> Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light" href="{{ url_for('register') }}">
+                                <i class="fas fa-user-plus me-1"></i> Register
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {% if category == 'success' %}
+                            <i class="fas fa-check-circle me-2"></i>
+                        {% elif category == 'danger' %}
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                        {% elif category == 'warning' %}
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                        {% else %}
+                            <i class="fas fa-info-circle me-2"></i>
+                        {% endif %}
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="confirmation-header animate__animated animate__fadeIn">
+            <div class="confirmation-icon animate-float">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 data-aos="fade-up">Order Confirmed!</h2>
+            <p class="lead" data-aos="fade-up" data-aos-delay="100">Thank you for your purchase. Your order has been successfully placed.</p>
+            <div class="order-id pulse" data-aos="fade-up" data-aos-delay="200">
+                Order #{{ order.order_id }}
+            </div>
+            <p class="text-muted mt-3" data-aos="fade-up" data-aos-delay="300">
+                <i class="fas fa-calendar-alt me-1"></i> {{ order.order_date | timestamp_to_datetime }}
+            </p>
+        </div>
+
+        <div class="order-card animate__animated animate__fadeInUp" data-aos="fade-up">
+            <div class="card-header">
+                <i class="fas fa-receipt me-2"></i> Order Summary
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6 mb-4 mb-lg-0">
+                        <div class="address-box">
+                            <h5><i class="fas fa-truck"></i> Shipping Details</h5>
+                            <address>
+                                <strong>{{ order.shipping_address_line1 }}</strong><br>
+                                {% if order.shipping_address_line2 %}{{ order.shipping_address_line2 }}<br>{% endif %}
+                                {{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_zip_code }}<br>
+                                {{ order.shipping_country }}
+                            </address>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="status-box">
+                            <h5><i class="fas fa-info-circle"></i> Order Information</h5>
+                            <div class="mb-3">
+                                <h6>Payment Status:</h6>
+                                <p class="payment-status">
+                                    <i class="fas fa-check-circle"></i> Payment Successful
+                                </p>
+                            </div>
+                            <div>
+                                <h6>Order Status:</h6>
+                                <p class="order-status">
+                                    <i class="fas fa-clock"></i> {{ order.status|capitalize }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h5 class="mt-5 mb-3" data-aos="fade-up"><i class="fas fa-box-open me-2"></i>Order Items</h5>
+                <div class="table-responsive" data-aos="fade-up">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>ID</th>
+                                <th>Qty</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order_details %}
+                            <tr data-aos="fade-up" data-aos-delay="{{ loop.index * 50 }}">
+                                <td data-label="Product">{{ item.product_name }}</td>
+                                <td data-label="ID">{{ item.food_item_id }}</td>
+                                <td data-label="Qty">{{ item.quantity }}</td>
+                                <td data-label="Unit Price">₹{{ "%.2f"|format(item.price_at_order) }}</td>
+                                <td data-label="Total">₹{{ "%.2f"|format(item.quantity * item.price_at_order) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr data-aos="fade-up" data-aos-delay="{{ (order_details|length + 1) * 50 }}">
+                                <td colspan="4" class="text-end"><strong>Grand Total:</strong></td>
+                                <td><strong>₹{{ "%.2f"|format(order.total_amount) }}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons" data-aos="fade-up" data-aos-delay="300">
+            <a href="{{ url_for('consumer_dashboard') }}" class="btn btn-primary">
+                <i class="fas fa-shopping-basket"></i> Continue Shopping
+            </a>
+            <a href="{{ url_for('my_orders') }}" class="btn btn-secondary">
+                <i class="fas fa-list-alt"></i> View All Orders
+            </a>
+            <button class="btn btn-outline-primary">
+                <i class="fas fa-print"></i> Print Invoice
+            </button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p>&copy; 2025 Safe Food Supply Chain System. Powered by Argroup Solutions.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="social-links">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- GSAP for advanced animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    
+    <script>
+        // Initialize AOS animation
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+        
+        // Add ripple effect to buttons
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                let x = e.clientX - e.target.getBoundingClientRect().left;
+                let y = e.clientY - e.target.getBoundingClientRect().top;
+                
+                let ripples = document.createElement('span');
+                ripples.style.left = x + 'px';
+                ripples.style.top = y + 'px';
+                this.appendChild(ripples);
+                
+                setTimeout(() => {
+                    ripples.remove();
+                }, 1000);
+            });
+        });
+        
+        // Confetti effect on load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (performance.navigation.type === 1) { // Only on page refresh
+                const confettiSettings = { 
+                    target: 'confetti-canvas',
+                    max: 150,
+                    size: 1.5,
+                    animate: true,
+                    props: ['circle', 'square', 'triangle', 'line'],
+                    colors: [[67, 97, 238], [63, 55, 201], [76, 201, 240], [248, 150, 30]],
+                    clock: 25,
+                    rotate: true,
+                    start_from_edge: true,
+                    respawn: true
+                };
+                
+                const confetti = new ConfettiGenerator(confettiSettings);
+                confetti.render();
+                
+                setTimeout(() => {
+                    confetti.clear();
+                }, 5000);
+            }
+        });
+    </script>
+    <!-- Confetti.js -->
+    <script src="https://cdn.jsdelivr.net/npm/confetti-js@0.0.18/dist/index.min.js"></script>
+    <canvas id="confetti-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;pointer-events:none;"></canvas>
+</body>
+</html>

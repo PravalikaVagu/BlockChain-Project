@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Trace Food Item{% endblock %}
+{% block content %}
+<h2 class="mb-4">Trace Food Item History</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="POST">
+            <div class="form-group">
+                <label for="food_item_id">Enter Food Item ID:</label>
+                <input type="text" class="form-control" id="food_item_id" name="food_item_id" placeholder="e.g., APPLE_BATCH_001" value="{{ food_item_id if food_item_id else '' }}" required>
+            </div>
+            <button type="submit" class="btn btn-info">Trace Item</button>
+        </form>
+    </div>
+</div>
+
+{% if item_history %}
+    <h3>Trace History for: <span class="text-primary">{{ food_item_id }}</span></h3>
+    <p class="text-muted">Total events found: {{ item_history | length }}</p>
+    <div class="timeline">
+        {% for event in item_history %}
+        <div class="timeline-item card mb-3 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">{{ event.event_type }}</h5>
+                <p class="card-text">
+                    <strong>Timestamp:</strong> {{ event.timestamp | int | timestamp_to_datetime }}<br>
+                    <strong>Location:</strong> {{ event.location }}<br>
+                    <strong>Producer/Handler:</strong> {{ event.producer }}<br>
+                    <strong>From:</strong> {{ event.sender }} <strong>To:</strong> {{ event.recipient }}<br>
+                    {% if event.quantity %}<strong>Quantity:</strong> {{ event.quantity }} <br>{% endif %}
+                    {% if event.temperature_log %}<strong>Temperature Log:</strong> {{ event.temperature_log }} <br>{% endif %}
+                    {% if event.certification_info %}<strong>Certification Info:</strong> {{ event.certification_info }} <br>{% endif %}
+                    {% if event.destination %}<strong>Destination:</strong> {{ event.destination }} <br>{% endif %}
+                    {% if event.notes %}<strong>Notes:</strong> {{ event.notes }} <br>{% endif %}
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% elif food_item_id %}
+    <div class="alert alert-info mt-4" role="alert">
+        No events found for Food Item ID: "{{ food_item_id }}". Please check the ID or add events.
+    </div>
+{% endif %}
+
+<script>
+    // Flask jinja2 filter to format timestamp
+    function timestamp_to_datetime(timestamp) {
+        return new Date(timestamp * 1000).toLocaleString();
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Safe Food Supply - Register</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: url('https://task-manager-web-app-frontend.vercel.app/assets/images/login.gif') no-repeat center center/cover;
+      backdrop-filter: blur(4px);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .title {
+      color: #ffffff;
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 12px #00ffc3;
+      font-weight: bold;
+    }
+
+    .container {
+      width: 420px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 0 40px rgba(0, 255, 191, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(20px);
+      animation: slideUp 1s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(60px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .container h2 {
+      text-align: center;
+      color: #ffffff;
+      margin-bottom: 30px;
+      text-shadow: 0 0 8px #00ffd5;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px 40px 12px 15px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      outline: none;
+      transition: 0.4s ease;
+    }
+
+    .form-group input::placeholder {
+      color: #ccc;
+    }
+
+    .form-group select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      background-size: 20px;
+    }
+
+    .form-group i {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #00ffe5;
+      font-size: 1.1rem;
+      pointer-events: none;
+    }
+
+    .btn-register {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(45deg, #00ffc3, #00bcd4);
+      border: none;
+      border-radius: 25px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #000;
+      cursor: pointer;
+      transition: 0.4s ease;
+      box-shadow: 0 0 12px #00ffe5;
+    }
+
+    .btn-register:hover {
+      background: linear-gradient(45deg, #00bcd4, #00ffc3);
+      transform: translateY(-3px);
+      box-shadow: 0 0 24px #00ffe5;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      color: #fff;
+    }
+
+    .login-link a {
+      color: #00ffc3;
+      font-weight: bold;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .login-link a:hover {
+      color: #fff;
+      text-shadow: 0 0 6px #00ffd5;
+    }
+
+    .alert {
+      width: 100%;
+      background: rgba(255, 0, 0, 0.1);
+      border: 1px solid #ff4d4d;
+      color: #ffcccc;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    @media screen and (max-width: 480px) {
+      .container {
+        width: 100%;
+        padding: 30px 20px;
+      }
+
+      .title {
+        font-size: 1.4rem;
+      }
+    }
+
+    /* ✅ FIX: Visible options in select dropdown */
+    .form-group select option {
+      background-color: #222;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="title">A Blockchain-Based System for Safe Food Supply and Supervision</div>
+
+  <form method="POST" onsubmit="return validateForm()">
+    <div class="container">
+      <h2><i class="fas fa-user-plus"></i> Register</h2>
+
+      <div class="alert" id="alertBox">Please fill out all fields correctly.</div>
+
+      <div class="form-group">
+        <input type="text" name="username" id="username" placeholder="Username" required />
+        <i class="fas fa-user"></i>
+      </div>
+
+      <div class="form-group">
+        <input type="password" name="password" id="password" placeholder="Password" required />
+        <i class="fas fa-lock"></i>
+      </div>
+
+      <div class="form-group">
+        <select name="role" id="role" required>
+          <option value="" disabled selected>Select Role</option>
+          <option value="Producer">Producer</option>
+          <option value="Consumer">Consumer</option>
+        </select>
+        <i class="fas fa-user-tag"></i>
+      </div>
+
+      <button type="submit" class="btn-register">
+        <i class="fas fa-user-check"></i> Register Now
+      </button>
+
+      <div class="login-link">
+        Already a member? <a href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i> Login</a>
+      </div>
+    </div>
+  </form>
+
+  <script>
+    function validateForm() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const role = document.getElementById("role").value;
+
+      if (!username || !password || !role) {
+        document.getElementById("alertBox").style.display = "block";
+        return false;
+      }
+
+      document.getElementById("alertBox").style.display = "none";
+      return true;
+    }
+  </script>
+
+</body>
+</html>

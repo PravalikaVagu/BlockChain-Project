@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Full Blockchain{% endblock %}
+{% block content %}
+<h2 class="mb-4">Full Blockchain (<span class="text-info">{{ length }}</span> Blocks)</h2>
+
+{% if chain %}
+    <button class="btn btn-info mb-3" onclick="mineBlock()">Mine Pending Transactions (Forge New Block)</button>
+    <button class="btn btn-warning mb-3 ml-2" onclick="resolveConflicts()">Resolve Conflicts (Sync Chain)</button>
+
+    {% for block in chain %}
+    <div class="card mb-3 shadow-sm">
+        <div class="card-header bg-dark text-white">
+            Block #{{ block.index }}
+            <small class="float-right">Timestamp: {{ block.timestamp | int | timestamp_to_datetime }}</small>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Proof: <span class="text-success">{{ block.proof }}</span></h5>
+            <p class="card-text">Previous Hash: <code class="text-muted">{{ block.previous_hash }}</code></p>
+            <h6>Transactions:</h6>
+            {% if block.transactions %}
+                <ul class="list-group list-group-flush">
+                {% for transaction in block.transactions %}
+                    <li class="list-group-item">
+                        <strong>Food Item ID:</strong> {{ transaction.food_item_id }}<br>
+                        <strong>Event Type:</strong> {{ transaction.event_type }}<br>
+                        <strong>From:</strong> {{ transaction.sender }} <strong>To:</strong> {{ transaction.recipient }}<br>
+                        <strong>Producer:</strong> {{ transaction.producer }}<br>
+                        <strong>Location:</strong> {{ transaction.location }}<br>
+                        {% if transaction.quantity %}<strong>Quantity:</strong> {{ transaction.quantity }} <br>{% endif %}
+                        {% if transaction.temperature_log %}<strong>Temp Log:</strong> {{ transaction.temperature_log }} <br>{% endif %}
+                        {% if transaction.certification_info %}<strong>Cert:</strong> {{ transaction.certification_info }} <br>{% endif %}
+                        {% if transaction.destination %}<strong>Dest:</strong> {{ transaction.destination }} <br>{% endif %}
+                        {% if transaction.notes %}<strong>Notes:</strong> {{ transaction.notes }} <br>{% endif %}
+                        <small class="text-muted">Transaction Timestamp: {{ transaction.timestamp | int | timestamp_to_datetime }}</small>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No transactions in this block.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-warning" role="alert">
+        The blockchain is empty. Try mining the genesis block or adding a new food event.
+    </div>
+{% endif %}
+
+<script>
+    // Flask jinja2 filter to format timestamp
+    function timestamp_to_datetime(timestamp) {
+        return new Date(timestamp * 1000).toLocaleString();
+    }
+
+    // Register this filter for use in the template
+    (function() {
+        var _escape = function(s) {
+            return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        };
+        var filters = {
+            'timestamp_to_datetime': function(val) {
+                return timestamp_to_datetime(val);
+            }
+        };
+        // This is a simplified approach. In a real Flask app, you'd register filters in Python.
+        // For dynamic JS rendering like this, direct JS function is fine.
+    })();
+
+    function mineBlock() {
+        fetch('/mine')
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url; // Handle redirects, e.g., if not logged in
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error mining block:', error);
+                alert('Error mining block. Check console for details.');
+            });
+    }
+
+    function resolveConflicts() {
+        fetch('/nodes/resolve')
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url; // Handle redirects
+                }
+                // No need to parse JSON if the backend redirects with flash message
+                window.location.reload(); // Reload to show updated chain or flash message
+            })
+            .catch(error => {
+                console.error('Error resolving conflicts:', error);
+                alert('Error resolving conflicts. Check console for details.');
+            });
+    }
+</script>
+{% endblock %}

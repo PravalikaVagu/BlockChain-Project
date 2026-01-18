@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Product Details{% endblock %}
+{% block content %}
+<h2 class="mb-4">Product Details: <span class="text-primary">{{ product.product_name }} ({{ product.food_item_id }})</span></h2>
+
+<div class="card mb-4 shadow-sm">
+    <div class="card-header bg-dark text-white">
+        Product Information
+    </div>
+    <div class="card-body">
+        <p><strong>Description:</strong> {{ product.description }}</p>
+        <p><strong>Producer:</strong> {{ product.producer_username }}</p>
+        <p><strong>Current Status:</strong> 
+            {% if product.verification_status == 'Pending' %}
+                <span class="badge badge-warning">Pending Admin Verification</span>
+            {% elif product.verification_status == 'Verified' %}
+                <span class="badge badge-success">Verified</span>
+            {% elif product.verification_status == 'Tampered' %}
+                <span class="badge badge-danger">Tampered!</span>
+            {% endif %}
+        </p>
+        {% if product.verified_by %}
+            <p><strong>Verified By:</strong> {{ product.verified_by }} at {{ product.verified_at | timestamp_to_datetime }}</p>
+        {% endif %}
+        <p><strong>Registered On:</strong> {{ product.created_at | timestamp_to_datetime }}</p>
+    </div>
+</div>
+
+<h3 class="mb-3">Supply Chain Trace History</h3>
+{% if events %}
+    <div class="timeline">
+        {% for event in events %}
+        <div class="timeline-item card mb-3 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title text-info">{{ event.event_type }}</h5>
+                <p class="card-text">
+                    <strong>Location:</strong> {{ event.location }}<br>
+                    <strong>Timestamp:</strong> {{ event.event_timestamp | timestamp_to_datetime }}<br>
+                    {% if event.details %}<strong>Details:</strong> {{ event.details }}<br>{% endif %}
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info" role="alert">
+        No supply chain events recorded for this product yet.
+    </div>
+{% endif %}
+
+<div class="mt-4 text-center">
+    <a href="{{ url_for('consumer_dashboard') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Products</a>
+</div>
+{% endblock %}

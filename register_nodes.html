@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Register Nodes{% endblock %}
+{% block content %}
+<h2 class="mb-4">Register New Network Nodes</h2>
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="form-group">
+                <label for="nodes">Node Addresses</label>
+                <textarea class="form-control" id="nodes" name="nodes" rows="5" placeholder="Enter node addresses, one per line or comma-separated. E.g., http://192.168.0.5:5000, http://localhost:5001" required></textarea>
+                <small class="form-text text-muted">Separate multiple addresses with commas or new lines.</small>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Register Nodes</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

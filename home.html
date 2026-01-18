@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Food Supply - Home</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            padding-top: 70px;
+            background-color: #f0f2f5; /* Lighter background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .footer {
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            background-color: #343a40; /* Darker footer */
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 0.9em;
+            border-top: 1px solid #495057;
+            margin-top: 60px;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15); /* Stronger shadow */
+            transition: transform 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-header {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background-color: #007bff; /* Primary color for card header */
+            color: white;
+            font-weight: bold;
+        }
+        .btn-action {
+            margin-right: 8px;
+            border-radius: 50px; /* Pill-shaped buttons */
+            padding: 8px 20px;
+            font-weight: 500;
+        }
+
+        /* Hero Section Specific Styles */
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://source.unsplash.com/1600x900/?food,supplychain') no-repeat center center;
+            background-size: cover;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .hero-section h1 {
+            font-size: 3.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .hero-section p.lead {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .hero-section .btn {
+            font-size: 1.2rem;
+            padding: 12px 30px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+        .hero-section .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Dashboard Buttons in Hero Section */
+        .hero-section .btn-primary { background-color: #28a745; border-color: #28a745; }
+        .hero-section .btn-primary:hover { background-color: #218838; border-color: #1e7e34; }
+        .hero-section .btn-secondary { background-color: #17a2b8; border-color: #17a2b8; }
+        .hero-section .btn-secondary:hover { background-color: #138496; border-color: #117a8b; }
+        .hero-section .btn-info { background-color: #ffc107; border-color: #ffc107; color: #333; }
+        .hero-section .btn-info:hover { background-color: #e0a800; border-color: #d39e00; color: #333; }
+
+        /* Welcome Message Styling */
+        .welcome-message {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            margin-top: 40px;
+            text-align: center;
+        }
+        .welcome-message h2 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .welcome-message p {
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="{{ url_for('home') }}">SafeFoodChain</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url_for('home') }}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                {% if session.get('logged_in') %}
+                    {% if session.get('role') == 'Producer' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('producer_dashboard') }}">Producer Dashboard</a>
+                        </li>
+                    {% elif session.get('role') == 'Admin' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
+                        </li>
+                    {% elif session.get('role') == 'Consumer' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('consumer_dashboard') }}">Consumer Dashboard</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                {% if session.get('logged_in') %}
+                    <li class="nav-item">
+                        <span class="navbar-text mr-3">
+                            Welcome, <strong>{{ session.get('username') }}</strong> ({{ session.get('role') }})
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light btn-action" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="btn btn-primary btn-action" href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-primary btn-action" href="{{ url_for('register') }}"><i class="fas fa-user-plus"></i> Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="hero-section">
+            <h1>Ensuring Trust in Every Bite.</h1>
+            <p class="lead">Track your food from farm to fork with our secure and transparent supply chain system.</p>
+            {% if session.get('logged_in') %}
+                <p class="lead">Your current role: <strong>{{ session.get('role') }}</strong></p>
+                <div class="mt-4">
+                    {% if session.get('role') == 'Admin' %}
+                        <a class="btn btn-primary btn-lg" href="{{ url_for('admin_dashboard') }}" role="button"><i class="fas fa-tachometer-alt"></i> Go to Admin Dashboard</a>
+                    {% elif session.get('role') == 'Producer' %}
+                        <a class="btn btn-secondary btn-lg" href="{{ url_for('producer_dashboard') }}" role="button"><i class="fas fa-seedling"></i> Go to Producer Dashboard</a>
+                    {% elif session.get('role') == 'Consumer' %}
+                        <a class="btn btn-info btn-lg" href="{{ url_for('consumer_dashboard') }}" role="button"><i class="fas fa-shopping-basket"></i> Go to Consumer Dashboard</a>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="mt-4">
+                    <a class="btn btn-primary btn-lg" href="{{ url_for('register') }}" role="button"><i class="fas fa-user-plus"></i> Get Started Today!</a>
+                    <a class="btn btn-outline-light btn-lg ml-3" href="{{ url_for('login') }}" role="button"><i class="fas fa-sign-in-alt"></i> Login</a>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if not session.get('logged_in') %}
+        <div class="row text-center welcome-message">
+            <div class="col-md-12">
+                <h2>About SafeFoodChain</h2>
+                <p>We are dedicated to building a transparent and secure food supply chain. Our platform leverages cutting-edge technology to ensure the authenticity and safety of food products from their origin to your plate.</p>
+                <p>Join us to experience a new level of trust in your food supply.</p>
+                <a class="btn btn-outline-secondary mt-3" href="{{ url_for('register') }}">Learn More & Register</a>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="jumbotron text-center bg-white mt-5 p-5 border rounded" style="box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <h1 class="display-4 text-primary mb-4">Welcome to Safe Food Chain System!</h1>
+            <p class="lead text-secondary">A secure and transparent platform for tracking food products.</p>
+            <hr class="my-4">
+            <p class="text-muted">Explore our features or log in to manage your role in the supply chain.</p>
+
+            {% if session.get('logged_in') %}
+                <p class="text-muted mt-4">You are currently logged in as: <strong class="text-dark">{{ session.get('username') }}</strong> with role: <strong class="text-dark">{{ session.get('role') }}</strong></p>
+                <div class="mt-4">
+                    {% if session.get('role') == 'Admin' %}
+                        <a class="btn btn-primary btn-lg btn-action" href="{{ url_for('admin_dashboard') }}" role="button"><i class="fas fa-user-shield"></i> Go to Admin Dashboard</a>
+                    {% elif session.get('role') == 'Producer' %}
+                        <a class="btn btn-success btn-lg btn-action" href="{{ url_for('producer_dashboard') }}" role="button"><i class="fas fa-industry"></i> Go to Producer Dashboard</a>
+                    {% elif session.get('role') == 'Consumer' %}
+                        <a class="btn btn-info btn-lg btn-action" href="{{ url_for('consumer_dashboard') }}" role="button"><i class="fas fa-leaf"></i> Go to Consumer Dashboard</a>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="mt-4">
+                    <a class="btn btn-primary btn-lg btn-action" href="{{ url_for('login') }}" role="button"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a class="btn btn-outline-success btn-lg btn-action" href="{{ url_for('register') }}" role="button"><i class="fas fa-user-plus"></i> Register</a>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Safe Food Supply Chain System. Powered by Your Team.</p>
+            <p>
+                <a href="#" class="text-light mr-2"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-light mr-2"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-light"><i class="fab fa-linkedin-in"></i></a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Optional: Smooth scrolling for anchor links
+            $('a.nav-link[href^="#"]').on('click', function(event) {
+                var target = $(this.hash);
+                if (target.length) {
+                    event.preventDefault();
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 70 // Adjust for fixed navbar
+                    }, 800);
+                }
+            });
+
+            // Auto-redirect logic if logged in (similar to previous home.html)
+            {% if session.get('logged_in') %}
+                var role = "{{ session.get('role') }}";
+                var redirectUrl = '';
+                if (role === 'Admin') {
+                    redirectUrl = "{{ url_for('admin_dashboard') }}";
+                } else if (role === 'Producer') {
+                    redirectUrl = "{{ url_for('producer_dashboard') }}";
+                } else if (role === 'Consumer') {
+                    redirectUrl = "{{ url_for('consumer_dashboard') }}";
+                }
+
+                if (redirectUrl) {
+                    setTimeout(function() {
+                        // window.location.href = redirectUrl; // Uncomment to enable auto-redirect
+                    }, 3000); // Redirect after 3 seconds
+                }
+            {% endif %}
+
+            // Example of a simple animation on card hover (if you add cards later)
+            // $('.card').hover(
+            //     function() {
+            //         $(this).find('.card-body').css('background-color', '#e9ecef');
+            //     },
+            //     function() {
+            //         $(this).find('.card-body').css('background-color', '#fff');
+            //     }
+            // );
+        });
+    </script>
+</body>
+</html>

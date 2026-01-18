@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Browse Verified Products{% endblock %}
+{% block content %}
+<h2 class="mb-4">Browse Verified Products (Available for Purchase)</h2>
+
+{% if products %}
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{{ product.product_name }} (ID: {{ product.food_item_id }})</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Category: {{ product.category }}</h6>
+                    <p class="card-text">{{ product.description }}</p>
+                    <p class="card-text"><small class="text-success">Status: {{ product.verification_status }}</small></p>
+                    {% if product.admin_verified_by %}
+                        <p class="card-text"><small class="text-muted">Verified by: {{ product.admin_verified_by }} on {{ product.admin_verified_timestamp | int | timestamp_to_datetime }}</small></p>
+                    {% endif %}
+                    <a href="{{ url_for('trace_food_item') }}?food_item_id={{ product.food_item_id }}" class="btn btn-info btn-sm">View Trace History</a>
+                    {# This is where a "Buy" button would go, or further purchase logic #}
+                    <button class="btn btn-success btn-sm ml-2" disabled>Buy (Simulated)</button>
+                    <small class="text-muted ml-2">(Feature to be implemented)</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info" role="alert">
+        No verified products are currently available for Browse.
+    </div>
+{% endif %}
+{% endblock %}
